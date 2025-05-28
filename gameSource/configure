@@ -1,0 +1,126 @@
+#!/bin/bash
+
+#
+# Historique des modifications
+#
+# 2007-Novembre-12    Jason Rohrer
+# Copié/modifié depuis le projet Cultivation (game2).
+#
+# 2024-Mai-27        Mise à jour
+# Ajout de vérification de configuration et traduction en français
+#
+# 2024-Mai-27        Ajout d'option de nettoyage
+# Possibilité de nettoyer les fichiers compilés
+
+# Fonction pour vérifier si la configuration a déjà été effectuée
+echo "Bienvenue dans le script de configuration"
+verifier_configuration() {
+    if [ -f "Makefile" ]; then
+        echo "Une configuration a déjà été effectuée (Makefile existe)."
+        echo "Voulez-vous reconfigurer ? (o/n)"
+        echo -n "> "
+        read reponse
+        
+        if [ "$reponse" != "o" ] && [ "$reponse" != "O" ]; then
+            echo "Configuration annulée. Makefile existant conservé."
+            exit 0
+        fi
+        
+        echo "Reconfiguration en cours..."
+    fi
+}
+
+# Vérification si l'option de nettoyage est demandée
+if [ "$1" = "clean" ]; then
+    if [ -f "Makefile" ]; then
+        echo "Nettoyage des fichiers compilés..."
+        mingw32-make clean
+        echo "Nettoyage terminé!"
+    else
+        echo "Aucun Makefile trouvé. Configuration requise avant nettoyage."
+    fi
+    exit 0
+fi
+
+# Vérification de configuration existante
+verifier_configuration
+
+echo "Configuration lancée avec succès !"
+while [ -z "$choixPlateforme" ]
+do
+    echo "Sélectionnez votre plateforme :"
+
+    echo "  1 --  GNU/Linux"
+    echo "  2 --  MacOSX"
+    echo "  3 --  Windows avec MinGW"
+    echo "  c --  Nettoyer les fichiers compilés (mingw32-make clean)"
+    echo "  q --  Quitter"
+
+    echo ""
+    echo -n "> "
+
+    read choixPlateforme
+
+    if [ "$choixPlateforme" = "q" ]
+    then
+        exit
+    fi
+    
+    if [ "$choixPlateforme" = "c" ]
+    then
+        if [ -f "Makefile" ]; then
+            echo "Nettoyage des fichiers compilés..."
+            mingw32-make clean
+            echo "Nettoyage terminé!"
+        else
+            echo "Aucun Makefile trouvé. Configuration requise avant nettoyage."
+        fi
+        exit
+    fi
+
+    # Comparaison ASCII
+    if [[ "$choixPlateforme" > "3" ]]
+    then
+        choixPlateforme=""
+    fi
+
+    if [[ "$choixPlateforme" < "1" ]]
+    then
+        choixPlateforme=""
+    fi
+
+done
+
+nomPlateforme="Générique"
+fichierMakefile="generic"
+
+case "$choixPlateforme" in
+    "1" )
+        nomPlateforme="GNU/Linux"
+        fichierMakefile="Makefile.GnuLinux"
+    ;;
+
+    "2" )
+        nomPlateforme="MacOSX"
+        fichierMakefile="Makefile.MacOSX"
+    ;;
+
+    "3" )
+        nomPlateforme="Windows MinGW"
+        fichierMakefile="Makefile.MinGW"
+    ;;
+esac
+
+rm -f Makefile.temp
+echo "# Auto-généré par gamma256/gameSource/configure pour la plateforme $nomPlateforme. Ne pas modifier manuellement." > Makefile.temp
+
+rm -f Makefile
+cat Makefile.temp $fichierMakefile Makefile.all > Makefile
+
+rm Makefile.temp
+
+echo "Configuration terminée pour $nomPlateforme!"
+echo "Vous pouvez maintenant compiler le projet avec la commande 'make'"
+echo "Pour nettoyer les fichiers compilés, utilisez 'bash configure clean'"
+
+exit

@@ -1,0 +1,11 @@
+Screen dimensions for fullscreen mode:  640x1500
+Starting game in windowed mode.
+Found 0 joysticks
+Max note length in song = 12
+Local epoch time  = 315529200
+GMT epoch time  = 315532800
+YOUTH MODE: ON
+Max world x = 162572.915331
+Min world x = 0.000000
+Frame rate = 14.868613 fps (2037 frames)
+Game time = 2:17

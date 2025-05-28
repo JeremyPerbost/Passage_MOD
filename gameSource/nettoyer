@@ -1,0 +1,30 @@
+#!/bin/bash
+
+echo "Script de nettoyage pour le projet Passage"
+echo "----------------------------------------"
+
+# Nettoyage manuel supplémentaire pour les fichiers dans minorGems
+echo "Suppression des fichiers objets dans minorGems..."
+rm -f ..//minorGems/util/*.o
+rm -f ..//minorGems/io/file/win32/*.o
+rm -f ..//minorGems/system/win32/*.o
+rm -f ..//minorGems/crypto/hashes/*.o
+rm -f ..//minorGems/formats/*.o
+
+# Vérification si un Makefile existe
+if [ -f "Makefile" ]; then
+    echo "Makefile trouvé, nettoyage des fichiers compilés..."
+    
+    # Tentative avec mingw32-make clean
+    if command -v mingw32-make &> /dev/null; then
+        mingw32-make clean
+    # Si mingw32-make n'est pas disponible, essayer avec make
+    elif command -v make &> /dev/null; then
+        make clean
+    fi
+    echo "Nettoyage terminé avec succès!"
+else
+    echo "Veuillez d'abord configurer le projet avec 'bash configure'"
+fi
+
+exit 0
