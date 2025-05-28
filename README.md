@@ -16,6 +16,7 @@ This mod is only available for Windows.
 ---
 
 ## How to use
+execute the Passage.exe in gameSource ! You need to have SDL1.2 but i alwais install it
 
 Press the **0** key at any time during the game to revert to being a child.
 
@@ -26,7 +27,7 @@ This version is only available on Windows.
 
 Build instructions:
 
-1. ``bash clean``  
+1. ``bash nettoyer``  
 2. ``bash configure`` (choose option 1)  
 3. ``make``
 
